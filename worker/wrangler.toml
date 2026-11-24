@@ -4,7 +4,7 @@ compatibility_date = "2026-01-01"
 
 [vars]
 # Ganti dengan origin situs GitHub Pages kamu (bisa dipisah koma untuk origin lokal saat pengembangan)
-ALLOWED_ORIGIN = "https://USERNAME.github.io"
+ALLOWED_ORIGIN = "https://ulumdepl.github.io,http://localhost:8080"
 FIREBASE_PROJECT_ID = "lentera-id"
 GEMINI_MODEL = "gemini-2.5-flash-lite"
 MAX_REQUESTS_PER_HOUR = "40"
@@ -13,4 +13,4 @@ MAX_REQUESTS_PER_HOUR = "40"
 # Lalu tempel ID yang dihasilkan ke bawah ini:
 [[kv_namespaces]]
 binding = "RATE_LIMIT_KV"
-id = "ISI_ID_KV_NAMESPACE_KAMU"
+id = "a7fa8ee2aa8c478d9aa616cb8f303e69"
