@@ -1,0 +1,44 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "quiz_events": {
+      "$roomCode": {
+        "$targetUid": {
+          ".read": "auth != null && auth.uid == $targetUid",
+          "$eventId": {
+            ".write": "auth != null && (auth.uid == $targetUid || !data.exists())",
+            ".validate": "newData.hasChildren(['type', 'fromUid', 'fromName', 'createdAt'])"
+          }
+        }
+      }
+    },
+    "park_rooms": {
+      "$roomCode": {
+        ".read": "auth != null",
+        "teams": {
+          "$teamId": {
+            "players": {
+              "$uid": {
+                ".write": "auth != null && auth.uid == $uid"
+              }
+            },
+            "state": {
+              ".write": "auth != null"
+            },
+            "throws": {
+              "$throwId": {
+                ".write": "auth != null"
+              }
+            },
+            "sabotage": {
+              "$sabId": {
+                ".write": "auth != null"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

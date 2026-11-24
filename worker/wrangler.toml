@@ -1,0 +1,16 @@
+name = "lentera-id-worker"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# Ganti dengan origin situs GitHub Pages kamu (bisa dipisah koma untuk origin lokal saat pengembangan)
+ALLOWED_ORIGIN = "https://USERNAME.github.io"
+FIREBASE_PROJECT_ID = "lentera-id"
+GEMINI_MODEL = "gemini-2.5-flash-lite"
+MAX_REQUESTS_PER_HOUR = "40"
+
+# Buat KV Namespace dengan: npx wrangler kv namespace create RATE_LIMIT_KV
+# Lalu tempel ID yang dihasilkan ke bawah ini:
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "ISI_ID_KV_NAMESPACE_KAMU"

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.cloudfunctions.net https://*.workers.dev https://generativelanguage.googleapis.com https://aiplatform.googleapis.com; frame-src https://*.firebaseapp.com https://accounts.google.com; object-src 'none'; base-uri 'self';" />
+  <title>Lentera ID — Ruang belajar kuliah dan Arena Game</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+  <link rel="stylesheet" href="css/style.css?v=5.0.0" />
+</head>
+<body>
+  <!-- Halaman Masuk (Khusus Google) -->
+  <div id="login-screen" class="login-screen hidden">
+    <div class="login-card">
+      <div class="brand-mark" style="margin-bottom:16px;">
+        <span class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>
+          </svg>
+        </span>
+        <span>Lentera ID</span>
+      </div>
+
+      <h1>Masuk ke Lentera ID</h1>
+      <p class="subtitle">
+        Gunakan akun Google untuk belajar Bahasa Indonesia dan mata kuliah lintas ilmu, mengumpulkan koin karakter, serta bermain di Arena Game.
+      </p>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="remember-login" checked />
+        <span>Tetap masuk di perangkat ini</span>
+      </label>
+
+      <button type="button" id="btn-google-login" class="btn btn-primary btn-full">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81Z"/>
+        </svg>
+        Masuk dengan Google
+      </button>
+
+      <p id="login-error" class="error-text hidden" role="alert"></p>
+    </div>
+
+    <div class="login-footer-links">
+      <a href="copyright.html">&copy; 2026 Lentera ID &mdash; Hak Cipta &amp; Tim</a>
+      <span>&bull;</span>
+      <a href="admin.html">Panel Admin</a>
+    </div>
+  </div>
+
+  <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
+
+  <!-- Aplikasi Utama -->
+  <div id="app-shell" class="app-shell hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-mark">
+          <span class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>
+            </svg>
+          </span>
+          <span>Lentera ID</span>
+        </div>
+        <button type="button" id="btn-close-sidebar" class="icon-btn mobile-only" aria-label="Tutup menu">&times;</button>
+      </div>
+
+      <nav class="nav-section" aria-label="Menu utama">
+        <div class="nav-label">Menu utama</div>
+        <button type="button" class="nav-item active" data-view="chat">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          Obrolan Belajar
+        </button>
+        <button type="button" class="nav-item" data-view="quiz">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="6" width="20" height="12" rx="4"/><path d="M6 12h4"/><path d="M8 10v4"/><circle cx="15" cy="11" r="1"/><circle cx="18" cy="13" r="1"/>
+          </svg>
+          Arena Game
+        </button>
+        <button type="button" class="nav-item" data-view="copyright">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><path d="M14.83 14.83a4 4 0 1 1 0-5.66"/>
+          </svg>
+          Hak Cipta &amp; Tim
+        </button>
+      </nav>
+
+      <div class="history-section">
+        <div class="nav-label">
+          <span>Riwayat obrolan</span>
+          <button type="button" id="btn-new-chat" class="btn btn-outline btn-sm" style="padding:3px 8px;min-height:26px;font-size:0.75rem;">+ Baru</button>
+        </div>
+        <div id="chat-history-list" class="history-list"></div>
+      </div>
+
+      <div class="quota-box">
+        <div class="quota-header">
+          <span>Kuota pesan / jam</span>
+          <span id="quota-text">0</span>
+        </div>
+        <div class="progress-track">
+          <div id="quota-bar" class="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button type="button" id="btn-open-profile" class="user-card user-card-btn" title="Ubah nama akun">
+          <div class="avatar" id="user-avatar">P</div>
+          <div class="user-meta">
+            <div class="user-name" id="user-name">Pengguna</div>
+            <div class="user-email" id="user-email">-</div>
+          </div>
+          <span class="user-edit-hint" aria-hidden="true">Ubah</span>
+        </button>
+        <button type="button" id="btn-logout" class="btn btn-outline btn-full btn-sm">Keluar</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button type="button" id="btn-open-sidebar" class="icon-btn mobile-only" aria-label="Buka menu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div>
+            <h2 id="view-title">Lentera</h2>
+            <p id="view-subtitle">Teman belajar Bahasa Indonesia dan mata kuliah lintas ilmu.</p>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button type="button" id="btn-theme-toggle" class="icon-btn" data-theme-toggle aria-label="Ganti tema">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div id="blocked-banner" class="blocked-banner hidden" role="alert">
+        <strong>Akses dibatasi:</strong>
+        <span id="blocked-reason">Akun Anda dibatasi sementara oleh administrator.</span>
+      </div>
+
+      <!-- VIEW 1: OBROLAN BELAJAR -->
+      <section id="view-chat" class="view-panel">
+        <div class="chat-context-bar">
+          <label for="chat-subject-select">Konteks mata kuliah:</label>
+          <select id="chat-subject-select" class="select-input">
+            <option value="indonesia" selected>Bahasa Indonesia</option>
+            <option value="kalkulus">Kalkulus</option>
+            <option value="fisika">Fisika Teknik</option>
+            <option value="agama">Agama Islam</option>
+            <option value="logika">Logika Informatika</option>
+            <option value="pemrograman">Pemrograman Dasar Informatika</option>
+            <option value="pancasila">Pancasila</option>
+            <option value="inggris">Bahasa Inggris</option>
+            <option value="acak">Semua Mata Kuliah</option>
+          </select>
+        </div>
+
+        <div id="chat-messages" class="chat-messages"></div>
+
+        <form id="chat-form" class="chat-input-bar">
+          <textarea
+            id="chat-input"
+            rows="1"
+            placeholder="Tulis pertanyaan materi..."
+            required
+          ></textarea>
+          <button type="submit" id="btn-send" class="btn btn-primary">Kirim</button>
+        </form>
+      </section>
+
+      <!-- VIEW 2: ARENA GAME -->
+      <section id="view-quiz" class="view-panel hidden">
+        <div class="quiz-container">
+          <!-- Layar Pengaturan: 3 Langkah dalam 1 Layar -->
+          <div id="game-setup-view" class="quiz-card">
+            <div class="setup-step">
+              <div class="step-label">1. Pilih materi</div>
+              <div id="subject-chips" class="subject-chips-grid" role="group" aria-label="Pilih materi"></div>
+              <p id="chat-context-note" class="step-note hidden"></p>
+            </div>
+
+            <div class="setup-step">
+              <div class="step-label">2. Pilih game</div>
+              <div id="game-cards-grid" class="game-pick-grid" role="group" aria-label="Pilih jenis permainan"></div>
+            </div>
+
+            <div class="setup-step">
+              <div class="step-label">3. Atur main</div>
+              <div class="setup-controls-grid">
+                <div class="form-group">
+                  <label for="player-count-number">Jumlah pemain</label>
+                  <div class="player-count-row">
+                    <input type="range" id="player-count-slider" class="range-input" min="1" step="1" value="1" aria-label="Geser jumlah pemain" />
+                    <input type="number" id="player-count-number" class="text-input player-num-input" min="1" step="1" value="1" />
+                  </div>
+                  <small id="player-mode-note" class="step-note">Mode Solo</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="stage-count-number">Jumlah stage</label>
+                  <div class="player-count-row">
+                    <input type="range" id="stage-count-slider" class="range-input" min="3" max="10" step="1" value="3" aria-label="Geser jumlah stage" />
+                    <input type="number" id="stage-count-number" class="text-input player-num-input" min="3" max="10" step="1" value="3" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="quiz-difficulty">Tingkat kesulitan</label>
+                  <select id="quiz-difficulty" class="select-input">
+                    <option value="mudah">Mudah</option>
+                    <option value="sedang" selected>Sedang</option>
+                    <option value="sulit">Sulit</option>
+                  </select>
+                </div>
+
+                <div class="form-group" id="q-per-stage-group">
+                  <label for="q-per-stage-select">Soal per stage</label>
+                  <select id="q-per-stage-select" class="select-input">
+                    <option value="5">5 soal per stage</option>
+                    <option value="10" selected>10 soal per stage</option>
+                  </select>
+                </div>
+
+                <div class="form-group hidden" id="host-mode-group">
+                  <label for="host-mode-select">Peran pembuat ruang</label>
+                  <select id="host-mode-select" class="select-input">
+                    <option value="play" selected>Ikut bermain + Moderator</option>
+                    <option value="moderator">Hanya Moderator</option>
+                  </select>
+                </div>
+
+
+              </div>
+
+              <!-- Pilih Karakter & Skill Unik -->
+              <div class="wardrobe-box">
+                <div class="wardrobe-head">
+                  <strong>Pilih karakter</strong>
+                  <span class="hud-pill" id="user-coins-badge">Koin Lentera: 0</span>
+                </div>
+                <div id="character-selector-grid" class="char-select-grid"></div>
+              </div>
+
+              <div class="setup-footer-row">
+                <span id="game-personal-best" class="step-note">Rekor pribadi: 0</span>
+                <button type="button" id="btn-start-quiz" class="btn btn-primary">Mulai Solo</button>
+              </div>
+              <p id="quiz-status-msg" class="error-text hidden"></p>
+            </div>
+
+            <!-- Gabung Ruang Mabar dengan Kode -->
+            <div class="join-room-bar">
+              <label for="mabar-code-input" class="join-room-label">Punya kode ruang?</label>
+              <div class="mabar-join-row">
+                <input type="text" id="mabar-code-input" class="text-input" placeholder="Masukkan kode ruang" maxlength="8" />
+                <button type="button" id="btn-join-room" class="btn btn-outline">Gabung ruang</button>
+              </div>
+            </div>
+
+            <!-- Lobby Ruang Game Aktif -->
+            <div id="mabar-active-lobby" class="mabar-box hidden">
+              <div class="mabar-header-row">
+                <div class="hud-group">
+                  <span class="room-code-pill" id="mabar-room-code">LNT0000</span>
+                  <button type="button" id="btn-copy-room-code" class="btn btn-outline btn-sm">Salin kode</button>
+                  <span class="hud-pill" id="mabar-player-count">1 / 2 pemain</span>
+                </div>
+                <button type="button" id="btn-leave-room" class="btn btn-danger-outline btn-sm">Keluar ruang</button>
+              </div>
+
+              <div id="lobby-max-players-wrap" class="lobby-resize-row hidden">
+                <label for="lobby-max-players-input">Ubah batas pemain sebelum mulai:</label>
+                <input type="number" id="lobby-max-players-input" class="text-input player-num-input" min="2" step="1" value="2" />
+                <button type="button" id="btn-update-max-players" class="btn btn-secondary btn-sm">Simpan</button>
+              </div>
+
+              <p id="mabar-status-text" class="step-note" style="margin-bottom:10px;"></p>
+              <ul id="mabar-players-list" class="lb-list" style="margin-bottom:12px;"></ul>
+              <button type="button" id="btn-host-start-mabar" class="btn btn-primary btn-full">Mulai Game</button>
+
+              <!-- Panel Moderator Anti-Curang di Lobby -->
+              <div id="lobby-moderator-wrap" class="mod-panel-box hidden">
+                <div class="step-label" style="margin-bottom:8px;">Panel Moderator</div>
+                <div class="table-wrap">
+                  <table class="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Peserta</th>
+                        <th>Progres</th>
+                        <th>Keluar tab</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody id="moderator-lobby-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panggung Moderator Khusus (Jika Host memilih Hanya Mengawasi) -->
+          <div id="moderator-live-stage" class="quiz-card hidden">
+            <div class="mabar-header-row">
+              <h3 id="mod-live-title">Panel Moderator Live</h3>
+              <button type="button" id="btn-mod-exit" class="btn btn-danger-outline btn-sm">Tutup &amp; Keluar Ruang</button>
+            </div>
+            <p class="quiz-desc">
+              Pantau peringkat, progres stage, dan deteksi peserta yang meninggalkan halaman selama permainan berlangsung.
+            </p>
+            <div class="table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Peserta</th>
+                    <th>Progres</th>
+                    <th>Keluar tab</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="moderator-live-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Panggung Permainan Aktif + Papan Peringkat Live -->
+          <div id="game-stage" class="stage-with-lb hidden">
+            <div class="game-stage-card">
+              <div class="quiz-hud">
+                <div class="hud-group">
+                  <strong id="game-world-title">Permainan</strong>
+                  <span class="hud-pill" id="hud-progress">Stage 1</span>
+                  <span class="hud-pill hidden" id="hud-timer">22 dtk</span>
+                </div>
+                <div class="hud-group">
+                  <span class="hud-pill hidden" id="hud-combo">Beruntun x2</span>
+                  <span class="hud-pill" id="hud-score">Skor: 0</span>
+                  <button type="button" id="btn-quiz-mute" class="btn btn-outline btn-sm">Suara: Aktif</button>
+                  <button type="button" id="btn-game-pause" class="btn btn-outline btn-sm">Jeda</button>
+                  <button type="button" id="btn-game-exit" class="btn btn-danger-outline btn-sm">Keluar</button>
+                </div>
+              </div>
+
+              <div id="game-mount" class="game-mount"></div>
+            </div>
+
+            <aside id="live-leaderboard-panel" class="live-lb-card hidden">
+              <h4>Papan peringkat</h4>
+              <ul id="live-leaderboard-list" class="lb-list"></ul>
+            </aside>
+          </div>
+
+          <!-- Layar Hasil -->
+          <div id="quiz-result" class="quiz-card hidden">
+            <h3 id="result-rank" style="margin-bottom:4px;">Permainan selesai</h3>
+            <p id="result-score-big" style="font-size:1.1875rem;font-weight:700;color:var(--primary);margin-bottom:4px;">Skor akhir: 0</p>
+            <p id="result-summary" class="quiz-desc"></p>
+
+            <div class="quiz-stats-row">
+              <div class="stat-mini">
+                <span class="stat-label">Benar</span>
+                <strong id="result-correct">0</strong>
+              </div>
+              <div class="stat-mini">
+                <span class="stat-label">Salah</span>
+                <strong id="result-wrong">0</strong>
+              </div>
+              <div class="stat-mini">
+                <span class="stat-label" id="result-extra-label">Progres</span>
+                <strong id="result-best-streak">-</strong>
+              </div>
+            </div>
+
+            <div id="result-leaderboard-wrap" class="hidden" style="margin-bottom:16px;">
+              <div class="section-subhead">Papan peringkat akhir</div>
+              <ul id="result-leaderboard-list" class="lb-list"></ul>
+            </div>
+
+            <div class="result-actions">
+              <button type="button" id="btn-retry-quiz" class="btn btn-primary">Main lagi</button>
+              <button type="button" id="btn-change-game" class="btn btn-secondary">Ganti game atau materi</button>
+              <button type="button" id="btn-back-to-chat" class="btn btn-outline">Kembali ke chat</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: HAK CIPTA & TIM -->
+      <section id="view-copyright" class="view-panel hidden">
+        <div class="copyright-container">
+          <div class="copyright-card">
+            <div class="copyright-header">
+              <h2>Hak cipta dan tim Lentera ID</h2>
+              <p class="quiz-desc">
+                Pilih kartu anggota di bawah ini untuk membuka profil GitHub masing-masing di tab baru.
+              </p>
+            </div>
+
+            <div class="campus-banner">
+              <div class="campus-logo-box">
+                <span class="campus-logo-fallback">UMUS</span>
+                <img src="assets/img/logo-umus.png" alt="Logo Universitas Muhadi Setiabudi Brebes" onerror="this.style.display='none'" />
+              </div>
+              <div class="campus-info">
+                <h3>Universitas Muhadi Setiabudi Brebes</h3>
+                <p>Karya mahasiswa Lentera ID</p>
+              </div>
+            </div>
+
+            <div class="team-grid" data-team-grid>
+              <a class="team-card" href="https://github.com/USERNAME-ISI-SENDIRI" target="_blank" rel="noopener noreferrer">
+                <div class="photo-avatar-wrap">
+                  <span class="photo-fallback">AU</span>
+                  <img src="assets/img/dev-ulum.jpg" alt="Foto Ahmad Shohibul Ulum" onerror="this.style.display='none'" />
+                </div>
+                <div class="team-name">Ahmad Shohibul Ulum</div>
+                <div class="team-role">Pengembang</div>
+                <div class="team-github-link">GitHub</div>
+              </a>
+              <a class="team-card" href="https://github.com/USERNAME-ISI-SENDIRI" target="_blank" rel="noopener noreferrer">
+                <div class="photo-avatar-wrap">
+                  <span class="photo-fallback">MM</span>
+                  <img src="assets/img/dev-misal.jpg" alt="Foto Muhammad Mis'al Maulana" onerror="this.style.display='none'" />
+                </div>
+                <div class="team-name">Muhammad Mis'al Maulana</div>
+                <div class="team-role">UI &amp; Ilustrasi</div>
+                <div class="team-github-link">GitHub</div>
+              </a>
+              <a class="team-card" href="https://github.com/USERNAME-ISI-SENDIRI" target="_blank" rel="noopener noreferrer">
+                <div class="photo-avatar-wrap">
+                  <span class="photo-fallback">MA</span>
+                  <img src="assets/img/dev-aziz.jpg" alt="Foto Muhammad Abdul Aziz" onerror="this.style.display='none'" />
+                </div>
+                <div class="team-name">Muhammad Abdul Aziz</div>
+                <div class="team-role">Penulis</div>
+                <div class="team-github-link">GitHub</div>
+              </a>
+            </div>
+
+            <div class="copyright-notice-box">
+              <h4>Pernyataan hak cipta</h4>
+              <p>
+                Hak Cipta &copy; 2026 Ahmad Shohibul Ulum, Muhammad Mis'al Maulana, dan Muhammad Abdul Aziz. Seluruh hak dilindungi.
+              </p>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+              <a href="copyright.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">Buka halaman hak cipta</a>
+              <a href="admin.html" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">Panel admin</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal Profil & Ubah Nama Akun -->
+  <div id="profile-modal" class="mission-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title">
+    <div class="mission-modal-card" style="max-width:420px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div class="avatar" id="profile-modal-avatar" style="width:48px;height:48px;font-size:1.1rem;">P</div>
+        <div style="min-width:0;flex:1;">
+          <h3 id="profile-modal-title" style="font-size:1.0625rem;">Profil Akun</h3>
+          <p id="profile-modal-email" style="font-size:0.8125rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">-</p>
+        </div>
+      </div>
+      <form id="profile-name-form">
+        <div class="form-group">
+          <label for="profile-name-input">Nama tampilan (obrolan &amp; Arena Game)</label>
+          <input type="text" id="profile-name-input" class="text-input" placeholder="Masukkan nama akun" maxlength="24" required />
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;">
+          <button type="button" id="btn-cancel-profile" class="btn btn-outline btn-sm">Batal</button>
+          <button type="submit" id="btn-save-profile" class="btn btn-primary btn-sm">Simpan nama</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Overlay Info Skill Karakter -->
+  <div id="hero-skill-modal" class="mission-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="hero-skill-title">
+    <div class="mission-modal-card hero-skill-modal-card">
+      <div class="hero-skill-modal-head">
+        <img id="hero-skill-avatar" class="hero-skill-modal-avatar" src="" alt="" />
+        <div style="min-width:0;flex:1;">
+          <h3 id="hero-skill-title" style="font-size:1.05rem;">Karakter</h3>
+          <span id="hero-skill-badge" class="hud-pill" style="display:inline-block;margin-top:4px;">Skill</span>
+        </div>
+        <button type="button" id="btn-close-hero-skill" class="icon-btn" aria-label="Tutup info skill">&times;</button>
+      </div>
+      <div class="hero-skill-modal-body">
+        <div class="hero-skill-meta-row">
+          <strong id="hero-skill-name">-</strong>
+          <span class="step-note" style="margin:0;">Cooldown 15 detik (4 detik saat Bos Terakhir)</span>
+        </div>
+        <p id="hero-skill-desc" class="hero-skill-modal-desc">-</p>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+        <button type="button" id="btn-ok-hero-skill" class="btn btn-primary btn-sm">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- KaTeX (untuk rumus Kalkulus & Fisika Teknik; otomatis fallback ke teks biasa bila offline) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+
+  <!-- Firebase Compat SDK (Auth, Firestore, Realtime Database) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+  <!-- Konfigurasi, Teks, Tema, & Bank 8 Mata Kuliah -->
+  <script charset="UTF-8" src="js/strings.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/env.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/config.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/theme-and-team.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/indonesia.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/kalkulus.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/fisika.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/agama.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/logika.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/pemrograman.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/pancasila.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/inggris.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/content/index.js?v=5.0.0"></script>
+
+  <!-- Peladen, Firebase, Anti-Curang, 2 Game Utama, & Controller -->
+  <script charset="UTF-8" src="js/lentera-engine.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/firebase-bridge.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/anti-cheat.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/games/sprite-renderer.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/games/game-core.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/games/lentera-quiz.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/games/lentera-park.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/mabar-lobby.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/games/game-manager.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/app.js?v=5.0.0"></script>
+</body>
+</html>

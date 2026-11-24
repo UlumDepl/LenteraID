@@ -1,0 +1,12 @@
+# Konfigurasi lokal
+js/env.js
+worker/.dev.vars
+.env
+.env.local
+
+# Hasil build & dependensi
+dist/
+node_modules/
+.wrangler/
+.DS_Store
+Thumbs.db

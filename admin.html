@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://cdnjs.cloudflare.com data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.cloudfunctions.net https://*.workers.dev; frame-src https://*.firebaseapp.com https://accounts.google.com; object-src 'none'; base-uri 'self';" />
+  <title>Panel Admin — Lentera ID</title>
+  <link rel="stylesheet" href="css/style.css?v=5.0.0" />
+  <link rel="stylesheet" href="css/admin.css?v=5.0.0" />
+</head>
+<body class="admin-body">
+  <div id="admin-login-screen" class="login-screen">
+    <div class="login-card">
+      <h1>Panel Admin Lentera ID</h1>
+      <p class="subtitle">
+        Masuk dengan akun Google yang terdaftar pada daftar admin resmi Lentera ID untuk memantau pengguna dan ruang Arena Game.
+      </p>
+
+      <button type="button" id="btn-admin-google" class="btn btn-primary btn-full">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81Z"/>
+        </svg>
+        Masuk dengan Google
+      </button>
+
+      <p id="admin-auth-error" class="error-text hidden" role="alert"></p>
+    </div>
+
+    <div class="login-footer-links">
+      <a href="index.html">&larr; Kembali ke Lentera ID</a>
+      <span>&bull;</span>
+      <a href="copyright.html">Hak Cipta</a>
+    </div>
+  </div>
+
+  <div id="admin-shell" class="admin-shell hidden">
+    <header class="admin-topbar">
+      <div class="admin-brand">
+        <span class="brand-icon admin-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </span>
+        <div>
+          <h1>Lentera ID &mdash; Panel Admin</h1>
+          <small id="admin-identity">-</small>
+        </div>
+      </div>
+      <div class="admin-actions">
+        <span class="live-clock-pill"><span class="pulse-dot"></span> <span id="live-clock-wib">Memuat waktu...</span></span>
+        <button type="button" class="icon-btn" data-theme-toggle aria-label="Ganti tema"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></button>
+        <a href="index.html" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">Buka aplikasi</a>
+        <button type="button" id="btn-admin-logout" class="btn btn-danger-outline btn-sm">Keluar</button>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <section class="kpi-grid">
+        <div class="kpi-card kpi-online">
+          <span class="kpi-label"><span class="pulse-dot"></span> Pengguna online</span>
+          <strong id="kpi-online-users">0</strong>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Total pengguna</span>
+          <strong id="kpi-total-users">0</strong>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Ruang Arena Game aktif</span>
+          <strong id="kpi-active-rooms">0</strong>
+        </div>
+        <div class="kpi-card kpi-warn">
+          <span class="kpi-label">Terindikasi anomali</span>
+          <strong id="kpi-anomaly">0</strong>
+        </div>
+        <div class="kpi-card kpi-danger">
+          <span class="kpi-label">Akun diblokir</span>
+          <strong id="kpi-blocked">0</strong>
+        </div>
+      </section>
+
+      <section class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Pemantauan pengguna</h2>
+            <p class="panel-sub">Data diambil langsung dari Firestore dan diperbarui otomatis.</p>
+          </div>
+          <div class="panel-controls">
+            <input type="text" id="search-user" class="text-input" placeholder="Cari nama atau email..." />
+            <select id="filter-status" class="select-input">
+              <option value="all">Semua pengguna</option>
+              <option value="online">Online sekarang</option>
+              <option value="anomaly">Anomali</option>
+              <option value="blocked">Diblokir</option>
+              <option value="active">Status normal</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Pengguna</th>
+                <th>Kehadiran &amp; aktivitas</th>
+                <th>Request / jam</th>
+                <th>Skor terbaik</th>
+                <th>Status akun</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="admin-user-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Ruang Arena Game aktif</h2>
+            <p class="panel-sub">Daftar ruang Arena Game yang sedang berjalan di Firestore.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Kode ruang</th>
+                <th>Host</th>
+                <th>Permainan</th>
+                <th>Pemain</th>
+                <th>Status</th>
+                <th>Pembaruan terakhir</th>
+              </tr>
+            </thead>
+            <tbody id="admin-rooms-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Log aktivitas admin</h2>
+            <p class="panel-sub">Catatan pemblokiran, pembukaan blokir, dan reset kuota di Firestore.</p>
+          </div>
+        </div>
+        <ul id="admin-log-list" class="log-list"></ul>
+      </section>
+    </main>
+
+    <footer class="admin-footer">
+      &copy; 2026 Lentera ID &mdash; <a href="copyright.html">Hak Cipta &amp; Tim</a>
+    </footer>
+  </div>
+
+  <div id="block-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <h3>Blokir akun pengguna</h3>
+      <p id="modal-target-user" class="modal-sub"></p>
+      <div class="form-group">
+        <label for="block-reason-input">Alasan pemblokiran</label>
+        <input type="text" id="block-reason-input" class="text-input" placeholder="Contoh: Aktivitas spam" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="btn-cancel-block" class="btn btn-outline">Batal</button>
+        <button type="button" id="btn-confirm-block" class="btn btn-danger">Konfirmasi blokir</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+  <script charset="UTF-8" src="js/strings.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/env.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/config.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/theme-and-team.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/firebase-bridge.js?v=5.0.0"></script>
+  <script charset="UTF-8" src="js/admin.js?v=5.0.0"></script>
+</body>
+</html>
