@@ -108,8 +108,8 @@ window.LenteraSprite = (function () {
     var leg = isRun ? Math.sin(phase) * 9 : (isJump ? 6 : 0);
     var arm = isRun ? Math.cos(phase) * 8 : (isJump ? -9 : 0);
 
-    // 0. EVMUS (Fallback Pixel Art 8-bit jika sprite sheet PNG gagal dimuat)
-    if (charId === "evmus") {
+    // 0. ermus (Fallback Pixel Art 8-bit jika sprite sheet PNG gagal dimuat)
+    if (charId === "ermus") {
       var pBob = Math.round(bob / 3) * 3;
       var pLeg = Math.round(leg / 3) * 3;
       // Kaki celana gelap & sepatu pixel

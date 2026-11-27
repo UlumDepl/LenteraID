@@ -54,7 +54,6 @@ service cloud.firestore {
         );
     }
 
-    // Koleksi admin
     match /admins/{adminEmail} {
       allow get: if isSignedIn()
         && request.auth.token.email is string
@@ -62,7 +61,6 @@ service cloud.firestore {
       allow list, create, update, delete: if isAdmin();
     }
 
-    // Koleksi pengguna
     match /users/{userId} {
       allow read: if (isSignedIn() && request.auth.uid == userId) || isAdmin();
 
@@ -94,7 +92,7 @@ service cloud.firestore {
           !request.resource.data.diff(resource.data).affectedKeys().hasAny(["coins"])
           || (
             isValidCoins(request.resource.data.coins)
-            && (request.resource.data.coins - (resource.data.coins is int ? resource.data.coins : 0)) <= 2000
+            && (request.resource.data.coins - (resource.data.coins is int ? resource.data.coins : 0)) <= 500
           )
         )
       );
@@ -102,7 +100,6 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // Ruang Arena Game (1 sampai 50 pemain, 3 sampai 10 stage, TTL expiresAt)
     match /mabar_rooms/{roomCode} {
       allow read: if isSignedIn() && isNotBlocked();
 
@@ -195,7 +192,21 @@ service cloud.firestore {
       }
     }
 
-    // Log aktivitas administrator
+    // Laporan Bug Pengguna ke Developer
+    match /bug_reports/{reportId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.uid == request.auth.uid);
+
+      allow create: if isSignedIn()
+        && isNotBlocked()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.description is string
+        && request.resource.data.description.size() >= 10
+        && request.resource.data.description.size() <= 1500
+        && request.resource.data.status == "open";
+
+      allow update, delete: if isAdmin();
+    }
+
     match /admin_logs/{logId} {
       allow read, write: if isAdmin();
     }

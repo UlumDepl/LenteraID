@@ -303,13 +303,17 @@ window.LenteraGames["lentera-park"] = (function () {
     var keyHolderUid = "";
     var doorOpen = false;
     var teamEnergy = 0;
+    var diffKey = String(cfg.difficulty || "sedang").toLowerCase();
+    var maxLives = diffKey === "mudah" ? 5 : (diffKey === "sulit" ? 3 : 4);
+    var lives = maxLives;
+    var isEliminated = false;
     var stageTimer = 0;
     var redLight = false;
     var lightCycleTimer = 3.5;
 
     var cam = { x: 0, y: 0 };
 
-    var myChar = cfg.character || { id: "evmus", name: "Evmus", primary: "#5C5E3E", accent: "#E6B43C", skillId: "maniburst", skillName: "Mani Burst" };
+    var myChar = cfg.character || { id: "ermus", name: "ermus", primary: "#5C5E3E", accent: "#E6B43C", skillId: "maniburst", skillName: "Mani Burst" };
     var me = {
       x: stage.spawn.x, y: stage.spawn.y, w: 34, h: 50,
       vx: 0, vy: 0, facing: 1, onGround: false,
@@ -549,14 +553,15 @@ window.LenteraGames["lentera-park"] = (function () {
       if (elHudStage) elHudStage.textContent = "Stage " + (currentStageIdx + 1) + "/" + totalStages + " \u2022 " + stage.name;
       if (elHudStatus) elHudStatus.textContent = statusLabel;
       if (elHudScore) elHudScore.textContent = "Skor " + score;
-
+      
       if (cfg.onHudUpdate) {
-        cfg.onHudUpdate({
-          progress: "Stage " + (currentStageIdx + 1) + "/" + totalStages + " \u2022 " + stage.name,
-          score: score,
-          timer: statusLabel
-        });
-      }
+      cfg.onHudUpdate({
+        progress: "Stage " + (currentStageIdx + 1) + "/" + totalStages + " \u2022 " + stage.name,
+        score: score,
+        timer: statusLabel,
+        playerCount: isMabar ? (Object.keys(remotePlayers).length + 1) : 0 // TAMBAHAN INI
+      });
+    }
 
       if (throwBtn && throwLabel) {
         var shortSkill = String(myChar.skillName || "Skill").split(" ")[0];
@@ -648,7 +653,7 @@ window.LenteraGames["lentera-park"] = (function () {
         CORE.Sound.spring();
         spawnParticles(me.x + 17, me.y + 24, "#FAF8EE", 18);
         spawnParticles(me.x + 17, me.y + 24, "#E5DFC8", 10);
-        showBanner((fromName || "Evmus") + " menyemburmu dengan Mani Burst.", false);
+        showBanner((fromName || "Ermus") + " menyemburmu dengan Mani Burst.", false);
       } else if (skillId === "hop") {
         me.hopTimer = 2.5;
         CORE.Sound.spring();
@@ -2005,7 +2010,7 @@ window.LenteraGames["lentera-park"] = (function () {
         ctx.save();
 
         if (ef.kind === "spray") {
-          // 1. EVMUS - MANI BURST: Semburan kipas kental putih-krem bergaya pixel + cipratan deras
+          // 1. ERMUS - MANI BURST: Semburan kipas kental putih-krem bergaya pixel + cipratan deras
           var coneLen = ef.range * Math.min(1, prog * 2.1);
           var dir = ef.facing || 1;
           ctx.globalAlpha = Math.min(0.82, ratio * 1.15);

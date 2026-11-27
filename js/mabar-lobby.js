@@ -374,9 +374,10 @@ window.LenteraMabar = (function () {
         bKick.className = "btn btn-danger-outline btn-sm";
         bKick.textContent = "Keluarkan";
         bKick.addEventListener("click", function () {
-          FB.updatePlayerDoc(activeRoomCode, p.uid, { kicked: true }, true);
+          FB.kickRoomPlayer(activeRoomCode, p.uid);
           if (callbacks.onNotify) callbacks.onNotify(p.name + " dikeluarkan dari ruang.", "info");
         });
+
 
         grp.appendChild(bWarn);
         grp.appendChild(bPen);
@@ -446,44 +447,54 @@ window.LenteraMabar = (function () {
       renderLeaderboardInto(elResultLeaderboardList, curActive, roomMax);
     }
   }
-
+  
   function handleRoomUpdate(room) {
     if (!room) {
       resetRoomState();
       if (callbacks.onNotify) callbacks.onNotify("Ruang Arena Game telah ditutup.", "info");
       return;
     }
+    
+    var wasWaiting = (activeRoomData && activeRoomData.status === "waiting");
     activeRoomData = room;
     isHost = Boolean(currentUser && room.hostUid === currentUser.uid);
     renderLobbyUI();
 
-    if (room.status === "playing" && !hasLaunchedGame) {
-      hasLaunchedGame = true;
-      if (isHost && room.hostMode === "moderator") {
-        if (typeof callbacks.onOpenModeratorView === "function") callbacks.onOpenModeratorView(room);
-        return;
-      }
+    // PERBAIKAN FASE 2: Pastikan transisi mulus dan serentak untuk SEMUA pemain
+    if (room.status === "playing") {
+      if (!hasLaunchedGame) {
+        hasLaunchedGame = true; // Kunci agar tidak terpanggil ganda
 
-      var myDoc = activePlayers.find(function (p) { return currentUser && p.uid === currentUser.uid; }) || {};
-      if (typeof callbacks.onStartSharedGame === "function") {
-        callbacks.onStartSharedGame({
-          gameType: room.gameType || "lentera-quiz",
-          subject: room.subject || "indonesia",
-          difficulty: room.difficulty || "sedang",
-          stageCount: Number(room.stageCount) || 3,
-          questionsPerStage: Number(room.questionsPerStage) || 10,
-          seed: room.seed || room.code,
-          aiItems: room.missionData || [],
-          character: getCurrentCharacter(),
-          playerName: getPlayerUsername(),
-          roomCode: activeRoomCode,
-          isMabar: true,
-          teamId: myDoc.teamId || "tim-1",
-          teamName: myDoc.teamName || "Tim 1"
-        });
+        if (isHost && room.hostMode === "moderator") {
+          if (typeof callbacks.onOpenModeratorView === "function") callbacks.onOpenModeratorView(room);
+          return;
+        }
+
+        var myDoc = activePlayers.find(function (p) { return currentUser && p.uid === currentUser.uid; }) || {};
+        if (typeof callbacks.onStartSharedGame === "function") {
+          callbacks.onStartSharedGame({
+            gameType: room.gameType || "lentera-quiz",
+            subject: room.subject || "indonesia",
+            difficulty: room.difficulty || "sedang",
+            stageCount: Number(room.stageCount) || 3,
+            questionsPerStage: Number(room.questionsPerStage) || 10,
+            seed: room.seed || room.code,
+            aiItems: room.missionData || [],
+            character: getCurrentCharacter(),
+            playerName: getPlayerUsername(),
+            roomCode: activeRoomCode,
+            isMabar: true,
+            teamId: myDoc.teamId || "tim-1",
+            teamName: myDoc.teamName || "Tim 1"
+          });
+        }
       }
+    } else if (room.status === "waiting" && !wasWaiting) {
+       // Reset flag jika room dikembalikan ke state waiting (misal di-restart)
+       hasLaunchedGame = false;
     }
   }
+
 
   function handlePlayersUpdate(list) {
     activePlayers = list || [];

@@ -76,19 +76,19 @@
       }
     ],
 
-    // 9 Karakter dengan ikon pixel art & skill serangan unik (Cooldown 15 detik, unlock dengan Koin Lentera)
+    // 9 Karakter dengan ikon pixel art & skill serangan unik
     CHARACTERS: [
       {
-        id: "evmus",
-        name: "Evmus",
+        id: "ermus", // BERUBAH DARI ermus
+        name: "Ermus", // BERUBAH DARI Ermus
         primary: "#5C5E3E",
         accent: "#E6B43C",
-        price: 0,
+        price: 150,
         isPixel: true,
-        avatar: "assets/img/sprites/evmus-avatar.png",
+        avatar: "assets/img/sprites/ermus-avatar.png",
         skillId: "maniburst",
         skillName: "Mani Burst",
-        skillDesc: "Semburan cairan putih kental meluncur deras, mendorong mundur dan membuat langkah lawan lengket selama 2,5 detik."
+        skillDesc: "Semburan cairan kental meluncur deras, mendorong mundur dan membuat langkah lawan lengket selama 2,5 detik."
       },
       {
         id: "pocong",
@@ -106,7 +106,7 @@
         name: "Kuntilanak",
         primary: "#DCE2E6",
         accent: "#3A2C46",
-        price: 150,
+        price: 0,
         avatar: "assets/img/sprites/kuntilanak-avatar.png",
         skillId: "confuse",
         skillName: "Tawa Cekikikan",
@@ -206,7 +206,7 @@ window.LenteraAuthStorage = (function () {
 
   return {
     getSelectedCharacter: function () {
-      try { return localStorage.getItem(CHAR_KEY) || "evmus"; } catch (e) { return "evmus"; }
+      try { return localStorage.getItem(CHAR_KEY) || "ermus"; } catch (e) { return "ermus"; }
     },
     setSelectedCharacter: function (charId) {
       try { localStorage.setItem(CHAR_KEY, charId); } catch (e) {}
@@ -220,7 +220,7 @@ window.LenteraAuthStorage = (function () {
     getLocalRoster: function () {
       return safeParse(localStorage.getItem(ROSTER_KEY), {
         coins: 0,
-        unlockedCharacters: ["evmus", "pocong"]
+        unlockedCharacters: ["ermus", "pocong"]
       });
     },
     saveLocalRoster: function (data) {
@@ -240,7 +240,7 @@ window.LenteraAuthStorage = (function () {
           requests: Number(userObj.requests || 0),
           bestQuizScore: Number(userObj.bestQuizScore || 0),
           coins: Number(userObj.coins || 0),
-          unlockedCharacters: Array.isArray(userObj.unlockedCharacters) ? userObj.unlockedCharacters : ["evmus", "pocong"],
+          unlockedCharacters: Array.isArray(userObj.unlockedCharacters) ? userObj.unlockedCharacters : ["ermus", "pocong"],
           isBlocked: Boolean(userObj.isBlocked),
           blockReason: userObj.blockReason || ""
         }));

@@ -12,6 +12,7 @@ on:
       - 'css/**'
       - 'js/**'
       - 'assets/**'
+      - 'worker/**'
   workflow_dispatch:
 
 permissions:
@@ -212,7 +213,7 @@ jobs:
           path: dist
 
   deploy:
-    name: Deploy Lentera ID
+    name: Deploy Lentera ID (Web & Worker)
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -220,6 +221,20 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Deploy Cloudflare Worker (Backend AI)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'worker'
+          secrets: |
+            GEMINI_API_KEY
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Deploy to GitHub Pages (Frontend Web)
         id: deployment
         uses: actions/deploy-pages@v5

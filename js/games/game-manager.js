@@ -218,6 +218,16 @@ window.LenteraGameManager = (function () {
       elHudTimer.classList.toggle("hidden", !hud.timer);
       elHudTimer.textContent = hud.timer || "";
     }
+    
+    var elMabarPlayers = document.getElementById("hud-mabar-players");
+    if (elMabarPlayers) {
+      if (hud.playerCount) {
+        elMabarPlayers.classList.remove("hidden");
+        elMabarPlayers.textContent = "Pemain: " + hud.playerCount;
+      } else {
+        elMabarPlayers.classList.add("hidden");
+      }
+    }
   }
 
   function launchGame(opts) {

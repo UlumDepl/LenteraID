@@ -15,7 +15,7 @@ window.LenteraGameCore = (function () {
     {
       id: "lentera-park",
       name: "Lentera Park",
-      desc: "Petualangan luas 2.5D dengan rintangan kunci, skill unik 9 karakter, dan pertarungan Bos Terakhir.",
+      desc: "Petualangan luas 2D dengan rintangan kunci, skill unik 9 karakter, dan pertarungan Bos Terakhir.",
       duration: "Layar Penuh Mendatar \u2022 3-10 Stage"
     }
   ];
